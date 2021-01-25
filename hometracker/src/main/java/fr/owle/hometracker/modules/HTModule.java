@@ -4,6 +4,7 @@ import fr.owle.hometracker.HTAPI;
 import fr.owle.hometracker.event.OnLoadEvent;
 import fr.owle.hometracker.event.OnStartEvent;
 import fr.owle.hometracker.event.OnStopEvent;
+import fr.owle.hometracker.pages.PageManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -196,5 +197,4 @@ public abstract class HTModule {
         HTModule module = (HTModule) o;
         return Objects.equals(config, module.config);
     }
-
 }
