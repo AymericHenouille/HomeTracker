@@ -55,6 +55,11 @@ public class LogEvent extends Event implements Cancelable {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(message, cancel);
+    }
+
+    @Override
     public boolean isCanceled() {
         return cancel;
     }

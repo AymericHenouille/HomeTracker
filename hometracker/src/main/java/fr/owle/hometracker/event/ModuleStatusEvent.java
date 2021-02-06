@@ -24,7 +24,7 @@ public abstract class ModuleStatusEvent extends Event implements Cancelable {
      * Create a new Module status Event.
      * @param module the module which have a change on his status
      */
-    public ModuleStatusEvent(HTModule module) {
+    protected ModuleStatusEvent(HTModule module) {
         this.module = module;
         cancel = false;
     }
@@ -51,6 +51,11 @@ public abstract class ModuleStatusEvent extends Event implements Cancelable {
         if (o == null || getClass() != o.getClass()) return false;
         ModuleStatusEvent that = (ModuleStatusEvent) o;
         return Objects.equals(module, that.module);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(module, cancel);
     }
 
     @Override

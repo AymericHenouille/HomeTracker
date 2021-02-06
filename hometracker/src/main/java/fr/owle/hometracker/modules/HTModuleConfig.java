@@ -129,4 +129,9 @@ public class HTModuleConfig {
                 Objects.equals(main, that.main) &&
                 Objects.equals(mainPageName,that.mainPageName);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, version, authors, dependencies, softDependencies, main, mainPageName);
+    }
 }

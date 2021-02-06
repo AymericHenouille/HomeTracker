@@ -121,4 +121,12 @@ public class SignalEmitEvent extends Event {
         SignalEmitEvent emitEvent = (SignalEmitEvent) o;
         return Objects.equals(signalEmitter, emitEvent.signalEmitter) && Arrays.equals(receptors, emitEvent.receptors) && Objects.equals(signal, emitEvent.signal) && Arrays.equals(args, emitEvent.args);
     }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(signalEmitter, signal);
+        result = 31 * result + Arrays.hashCode(receptors);
+        result = 31 * result + Arrays.hashCode(args);
+        return result;
+    }
 }

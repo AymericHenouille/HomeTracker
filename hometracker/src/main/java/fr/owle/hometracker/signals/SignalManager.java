@@ -6,7 +6,6 @@ import fr.owle.hometracker.events.EventHandler;
 import fr.owle.hometracker.events.EventManager;
 import fr.owle.hometracker.modules.HTModule;
 import fr.owle.hometracker.utils.Listener;
-import fr.owle.hometracker.utils.exception.InvalidParameterEventHandlerException;
 import fr.owle.hometracker.utils.exception.InvalidParameterSignalHandlerException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,32 +47,30 @@ public class SignalManager {
     }
 
     private void emit(HTModule module, String signalName, List<HTModule> receptors, Object...args) {
-        listeners.forEach((receptorModule, listeners) -> {
+        listeners.forEach((receptorModule, listenerList) -> {
             try {
-                for (Listener listener : listeners) {
+                for (Listener listener : listenerList) {
                     final Set<Method> methods;
-                    methods = getCompatibleMethods(module, signalName, listener);
+                    methods = getCompatibleMethods(signalName, listener);
                     for (Method method : methods) {
                         method.invoke(listener, args);
                         receptors.add(receptorModule);
                     }
                 }
-            } catch (InvalidParameterSignalHandlerException | IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 HTAPI.getLogger().error(htapi, e.getMessage());
             }
         });
     }
 
-    private Set<Method> getCompatibleMethods(HTModule module, String signalName, Listener listener) throws InvalidParameterSignalHandlerException {
+    private Set<Method> getCompatibleMethods(String signalName, Listener listener) {
         final Map<Method, Integer> compatibleMethods = new HashMap<>();
         final Method[] methods = listener.getClass().getMethods();
         for (Method method : methods) {
             final SignalHandler eventHandler = method.getDeclaredAnnotation(SignalHandler.class);
-            if (eventHandler != null) {
-                if (eventHandler.value().equals(signalName)) {
-                    final int priority = eventHandler.priority();
-                    compatibleMethods.put(method, priority);
-                }
+            if (eventHandler != null && eventHandler.value().equals(signalName)) {
+                final int priority = eventHandler.priority();
+                compatibleMethods.put(method, priority);
             }
         }
         return sortByDescendingValue(compatibleMethods).keySet();
@@ -89,13 +86,12 @@ public class SignalManager {
         return result;
     }
 
-    private boolean testListener(HTModule module, Listener listener) throws InvalidParameterSignalHandlerException {
+    private boolean testListener(HTModule module, Listener listener) {
         final Method[] methods = listener.getClass().getMethods();
         for (Method method : methods) {
             final EventHandler eventHandler = method.getDeclaredAnnotation(EventHandler.class);
-            if (eventHandler != null) {
-                if (method.getParameterCount() != 2 || !method.getParameterTypes()[0].equals(HTModule.class) || !method.getParameterTypes()[1].equals(String[].class))
-                    throw new InvalidParameterSignalHandlerException(module);
+            if (eventHandler != null && (method.getParameterCount() != 2 || !method.getParameterTypes()[0].equals(HTModule.class) || !method.getParameterTypes()[1].equals(String[].class))) {
+                return false;
             }
         }
         return true;
@@ -113,7 +109,7 @@ public class SignalManager {
             if (!listeners.containsKey(module))
                 listeners.put(module, new ArrayList<>());
             final List<Listener> moduleListeners = listeners.get(module);
-            if (!testListener(module, listener)) return false;
+            if (!testListener(module, listener)) throw new InvalidParameterSignalHandlerException(module);
             moduleListeners.add(listener);
             return true;
         } catch (InvalidParameterSignalHandlerException e) {

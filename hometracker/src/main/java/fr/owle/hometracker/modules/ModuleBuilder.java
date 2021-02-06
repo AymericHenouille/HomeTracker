@@ -128,16 +128,16 @@ public class ModuleBuilder {
 
 
     private HTModule build() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, IOException, InvalidModuleConfigurationException {
-        final JarFile jar = new JarFile(file);
-        final JarEntry jarEntry = jar.getJarEntry("module.yml");
-        final InputStream is = jar.getInputStream(jarEntry);
-        final HTModuleConfig config = readYml(file, is);
-        final Class<?> moduleClass = Class.forName(config.getMain(), true, urlClassLoader);
-        final Object object = moduleClass.getConstructor().newInstance();
-        final HTModule module = (HTModule) object;
-        module.setConfig(config);
-        module.setJarFile(jar);
-        return module;
+        try (JarFile jar = new JarFile(file)) {
+            final JarEntry jarEntry = jar.getJarEntry("module.yml");
+            final InputStream is = jar.getInputStream(jarEntry);
+            final HTModuleConfig config = readYml(file, is);
+            final Class<?> moduleClass = Class.forName(config.getMain(), true, urlClassLoader);
+            final Object object = moduleClass.getConstructor().newInstance();
+            final HTModule module = (HTModule) object;
+            module.setConfig(config);
+            module.setJarFile(jar);
+            return module;
+        }
     }
-
 }

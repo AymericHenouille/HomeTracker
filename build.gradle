@@ -9,7 +9,6 @@ buildscript {
     }
 }
 
-
 allprojects {
     version = hometracker_version as Object
     group = 'fr.owle'

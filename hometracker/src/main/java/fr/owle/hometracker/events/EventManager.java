@@ -69,7 +69,7 @@ public class EventManager {
             if (!listeners.containsKey(module))
                 listeners.put(module, new ArrayList<>());
             final List<Listener> moduleListeners = listeners.get(module);
-            if (!testListener(module, listener)) return false;
+            if (!testListener(module, listener)) throw new InvalidParameterEventHandlerException(module);
             moduleListeners.add(listener);
             return true;
         } catch (InvalidParameterEventHandlerException e) {
@@ -162,13 +162,13 @@ public class EventManager {
         return result;
     }
 
-    private boolean testListener(HTModule module, Listener listener) throws InvalidParameterEventHandlerException {
+    private boolean testListener(HTModule module, Listener listener) {
         final Method[] methods = listener.getClass().getMethods();
         for (Method method : methods) {
             final EventHandler eventHandler = method.getDeclaredAnnotation(EventHandler.class);
             if (eventHandler != null) {
                 if (method.getParameterCount() != 1) {
-                    throw new InvalidParameterEventHandlerException(module);
+                    return false;
                 }
             }
         }

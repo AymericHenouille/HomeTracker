@@ -4,7 +4,6 @@ import fr.owle.hometracker.HTAPI;
 import fr.owle.hometracker.event.OnLoadEvent;
 import fr.owle.hometracker.event.OnStartEvent;
 import fr.owle.hometracker.event.OnStopEvent;
-import fr.owle.hometracker.pages.PageManager;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +31,7 @@ public abstract class HTModule {
      * @param softDependencies the list of modules that your module name can use to work with but without being an obligation (your module <b>can</b> load without them).
      * @param main             the main file of your jar (example: com.dev.MyAwesomeModule).
      */
-    public HTModule(String name, String version, List<String> authors, List<String> dependencies, List<String> softDependencies, String main) {
+    protected HTModule(String name, String version, List<String> authors, List<String> dependencies, List<String> softDependencies, String main) {
         this(new HTModuleConfig(name, version, authors, dependencies, softDependencies, main, null));
     }
 
@@ -46,7 +45,7 @@ public abstract class HTModule {
      * @param main             the main file of your jar (example: com.dev.MyAwesomeModule).
      * @param mainPageName     the name of the main page by default it is "index".
      */
-    public HTModule(String name, String version, List<String> authors, List<String> dependencies, List<String> softDependencies, String main, String mainPageName) {
+    protected HTModule(String name, String version, List<String> authors, List<String> dependencies, List<String> softDependencies, String main, String mainPageName) {
         this(new HTModuleConfig(name, version, authors, dependencies, softDependencies, main, mainPageName));
     }
 
@@ -54,11 +53,11 @@ public abstract class HTModule {
      * Init your module by passing the {@link fr.owle.hometracker.modules.HTModuleConfig} object
      * @param config the configuration of your module
      */
-    public HTModule(HTModuleConfig config) {
+    protected HTModule(HTModuleConfig config) {
         this.config = config;
     }
 
-    public HTModule() {
+    protected HTModule() {
         config = new HTModuleConfig();
     }
 
@@ -196,5 +195,10 @@ public abstract class HTModule {
         if (o == null || getClass() != o.getClass()) return false;
         HTModule module = (HTModule) o;
         return Objects.equals(config, module.config);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(config, jarFile);
     }
 }

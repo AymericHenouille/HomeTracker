@@ -2,7 +2,10 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.5'
     id 'maven-publish'
     id 'java-library'
+    id "org.sonarqube" version "3.0"
+    id "jacoco"
 }
+jacoco.toolVersion="0.8.6"
 
 archivesBaseName = 'hometracker-api'
 sourceCompatibility = 11
@@ -97,3 +100,18 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.sources", "src/main"
+    }
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+test.finalizedBy jacocoTestReport
+tasks['sonarqube'].dependsOn test
