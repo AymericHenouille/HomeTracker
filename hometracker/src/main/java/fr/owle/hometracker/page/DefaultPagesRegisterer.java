@@ -2,6 +2,7 @@ package fr.owle.hometracker.page;
 
 import fr.owle.hometracker.HTAPI;
 import fr.owle.hometracker.pages.PageManager;
+import fr.owle.hometracker.storage.StorageManager;
 import fr.owle.hometracker.utils.exception.PageMissingIndexAnnotationException;
 import fr.owle.hometracker.utils.exception.PageNotFoundException;
 

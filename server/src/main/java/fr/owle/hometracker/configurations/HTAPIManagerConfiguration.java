@@ -8,6 +8,8 @@ import fr.owle.hometracker.modules.ModuleLoader;
 import fr.owle.hometracker.modules.ModuleManager;
 import fr.owle.hometracker.pages.PageContainer;
 import fr.owle.hometracker.pages.PageManager;
+import fr.owle.hometracker.storage.StorageContainer;
+import fr.owle.hometracker.storage.StorageManager;
 import fr.owle.hometracker.utils.Log;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +33,12 @@ public class HTAPIManagerConfiguration {
     public EventManager eventManager() {
         final EventContainer eventContainer = HTAPI.getEvent();
         return eventContainer.getEventManager();
+    }
+
+    @Bean
+    public StorageManager storageManager() {
+        final StorageContainer storageContainer = HTAPI.getStorage();
+        return storageContainer.getStorageManager();
     }
 
     @Bean

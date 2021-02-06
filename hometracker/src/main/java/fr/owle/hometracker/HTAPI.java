@@ -6,10 +6,9 @@ import fr.owle.hometracker.modules.HTModule;
 import fr.owle.hometracker.modules.HTModuleAdapter;
 import fr.owle.hometracker.modules.ModuleContainer;
 import fr.owle.hometracker.page.DefaultPagesRegisterer;
-import fr.owle.hometracker.page.UiPage;
 import fr.owle.hometracker.pages.PageContainer;
-import fr.owle.hometracker.pages.PageManager;
 import fr.owle.hometracker.signals.SignalContainer;
+import fr.owle.hometracker.storage.StorageContainer;
 import fr.owle.hometracker.utils.Log;
 import fr.owle.hometracker.utils.exception.HTModuleNotFoundException;
 
@@ -43,6 +42,10 @@ public class HTAPI extends HTModuleAdapter {
      * Log section.
      */
     private static Log logger;
+    /**
+     * Storage section
+     */
+    protected static StorageContainer storage;
 
     private static HTModule serverModule;
 
@@ -108,6 +111,15 @@ public class HTAPI extends HTModuleAdapter {
      */
     public static Log getLogger() {
         return logger = logger == null ? new Log(getEvent()) : logger;
+    }
+
+    /**
+     * Getter for storage logic section.
+     *
+     * @return The Storage section.
+     */
+    public static StorageContainer getStorage() {
+        return storage = storage == null ? new StorageContainer() : storage;
     }
 
     public static HTModule getHTAPI() {

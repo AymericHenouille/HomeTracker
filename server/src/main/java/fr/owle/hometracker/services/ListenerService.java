@@ -4,6 +4,7 @@ import fr.owle.hometracker.HTAPI;
 import fr.owle.hometracker.events.EventManager;
 import fr.owle.hometracker.listeners.LogListener;
 import fr.owle.hometracker.listeners.StatusListener;
+import fr.owle.hometracker.listeners.StorageListener;
 import fr.owle.hometracker.modules.HTModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,9 +18,12 @@ public class ListenerService {
     @Autowired
     private LogListener logger;
 
+    @Autowired
+    private StorageListener storage;
+
     public void registerListener(HTModule module) {
         final EventManager eventManager = HTAPI.getEvent().getEventManager();
-        eventManager.registerEventListener(module, logger, status);
+        eventManager.registerEventListener(module, logger, status, storage);
     }
 
 }

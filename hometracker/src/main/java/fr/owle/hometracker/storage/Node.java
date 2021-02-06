@@ -1,5 +1,10 @@
 package fr.owle.hometracker.storage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 /**
  * <pre>
  * Represent an element stored in the storage system.
@@ -63,8 +68,7 @@ public class Node<E> {
         this.key = key;
     }
 
-    public Node() {
-    }
+    public Node() { }
 
     public Node(String key, E value) {
         this.key = key;
@@ -85,5 +89,34 @@ public class Node<E> {
 
     public void setValue(E value) {
         this.value = value;
+    }
+
+    public boolean equalsKey(Node<?> node) {
+        return node.getKey().equals(key);
+    }
+
+    public boolean isRootNode() {
+        return value instanceof List && !((List<?>) value).isEmpty() && ((List<?>) value).get(0) instanceof Node;
+    }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "key='" + key + '\'' +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node<?> node = (Node<?>) o;
+        return Objects.equals(key, node.key) && Objects.equals(value, node.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
     }
 }
